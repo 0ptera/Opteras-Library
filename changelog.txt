@@ -1,0 +1,7 @@
+---------------------------------------------------------------------------------------------------
+Version: 0.1.0
+Date: 2019-03-19
+  Features:
+    - function copy_prototype
+    - function create_icons
+    - function multiply_energy_value

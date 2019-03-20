@@ -19,3 +19,4 @@ A small library of functions I often use and got tired of maintaining in every m
 ### script/train
 [get_main_locomotive](https://github.com/Yousei9/Opteras-Library/wiki/Control-Stage-Functions#get_main_locomotive)<br />
 [get_train_name](https://github.com/Yousei9/Opteras-Library/wiki/Control-Stage-Functions#get_train_name)<br />
+[rotate_carriage](https://github.com/Yousei9/Opteras-Library/wiki/Control-Stage-Functions#rotate_carriage)<br />

@@ -5,8 +5,9 @@
 --]]
 
 -- copies prototypes and assigns new name and minable
--- returns copied prototype
-function optera_lib.copy_prototype(prototype, new_name)
+-- Parameters: prototype, new_name
+-- Returns: copied prototype
+function copy_prototype(prototype, new_name)
   if not prototype.type or not prototype.name then
     error("Invalid prototype: prototypes must have name and type properties.")
     return nil
@@ -33,9 +34,9 @@ function optera_lib.copy_prototype(prototype, new_name)
 end
 
 -- adds new icon layers to a prototype icon or icons and returns the result
--- parameters: prototype, new_layers = { { icon, icon_size, tint (optional) } }
--- returns created layered icon or nil
-function optera_lib.create_icons(prototype, new_layers)
+-- Parameters: prototype, new_layers = { { icon, icon_size, tint (optional) } }
+-- Returns: created layered icon or nil
+function create_icons(prototype, new_layers)
   for _,new_layer in pairs(new_layers) do
     if not new_layer.icon or not new_layer.icon_size then
       return nil
@@ -68,9 +69,10 @@ function optera_lib.create_icons(prototype, new_layers)
   end
 end
 
--- multiplies energy string with factor
--- returns updated energy string
-function optera_lib.multiply_energy_value(energy_string, factor)
+-- multiplies energy string, e.g. '12kW' with factor
+-- Parameters: energy_string, multiplicator
+-- Returns: updated energy string
+function multiply_energy_value(energy_string, factor)
   if type(energy_string) == "string" then
     local num, str, exp, energy = string.match(energy_string, "([%-+]?[0-9]*%.?[0-9]+)(([kKMGTPH]?)([WJ]))")
     if num and str and energy then
@@ -80,4 +82,8 @@ function optera_lib.multiply_energy_value(energy_string, factor)
   end
 end
 
-
+return {
+  copy_prototype = copy_prototype,
+  create_icons = create_icons,
+  multiply_energy_value = multiply_energy_value,
+}

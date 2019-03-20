@@ -4,4 +4,4 @@
  * See LICENSE.md in the project directory for license information.
 --]]
 
-optera_lib = require("data/utilities")
+optera_lib = require ("data.utilities")

@@ -55,3 +55,10 @@ function compare_tables(tb1, tb2)
   end
   return true
 end
+
+return {
+  get_distance = get_distance,
+  get_distance_squared = get_distance_squared,
+  ticks_to_timestring = ticks_to_timestring,
+  compare_tables = compare_tables,
+}

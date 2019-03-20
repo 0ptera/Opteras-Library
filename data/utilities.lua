@@ -82,4 +82,8 @@ function multiply_energy_value(energy_string, factor)
   end
 end
 
-
+return {
+  copy_prototype = copy_prototype,
+  create_icons = create_icons,
+  multiply_energy_value = multiply_energy_value,
+}

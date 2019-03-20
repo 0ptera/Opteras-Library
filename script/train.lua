@@ -21,3 +21,7 @@ function get_train_name(train)
   return loco and loco.backer_name
 end
 
+return {
+  get_main_locomotive = get_main_locomotive,
+  get_train_name = get_train_name,
+}

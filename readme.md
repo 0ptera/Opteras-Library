@@ -1,6 +1,18 @@
 # Optera's Library
 A small library of functions I often use and got tired of maintaining in every mod.
 
+## Usage:
+
+Make whole module available:<br />
+local optera_lib = require("data.utilities")<br />
+optera_lib.copy_prototype()<br />
+<br />
+Make single function available:<br />
+local copy_prototype = require("data.utilities").copy_prototype<br />
+copy_prototype()<br />
+
+
+
 ## Data Stage Functions
 
 ### data/utilities

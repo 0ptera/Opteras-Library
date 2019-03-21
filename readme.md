@@ -4,12 +4,15 @@ A small library of functions I often use and got tired of maintaining in every m
 ## Usage:
 
 Make whole module available:<br />
-local optera_lib = require("data.utilities")<br />
+local optera_lib = require("\_\_OpteraLib\_\_.script.misc")<br />
+optera_lib.get_distance()<br />
+<br />
+Note: The library creates a global reference optera_lib, allowing direct access to functions:<br />
 optera_lib.copy_prototype()<br />
 <br />
 Make single function available:<br />
-local copy_prototype = require("data.utilities").copy_prototype<br />
-copy_prototype()<br />
+local get_distance = require("\_\_OpteraLib\_\_.script.misc").copy_prototype<br />
+get_distance()<br />
 
 
 

@@ -1,5 +1,5 @@
 # Optera's Library
-A small library of functions I often use and got tired of maintaining in every mod.
+A library of functions I often use and got tired of maintaining in every mod.
 
 ## Usage:
 

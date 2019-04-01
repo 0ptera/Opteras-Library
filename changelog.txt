@@ -1,4 +1,11 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.1.2
+Date: 2019-04-01
+  Features:
+    - script.train.get_train_composition_string
+  Changes:
+    - module functions are now local
+---------------------------------------------------------------------------------------------------
 Version: 0.1.1
 Date: 2019-03-21
   Features:
@@ -11,8 +18,8 @@ Date: 2019-03-21
     - script.train.rotate_carriage
   Changes:
     - copy_prototype moved to data.utilities.copy_prototype
-    - create_icons moved to moved to data.utilities.create_icons
-    - multiply_energy_value moved to moved to data.utilities.multiply_energy_value    
+    - create_icons moved to data.utilities.create_icons
+    - multiply_energy_value moved to data.utilities.multiply_energy_value
 ---------------------------------------------------------------------------------------------------
 Version: 0.1.0
 Date: 2019-03-19

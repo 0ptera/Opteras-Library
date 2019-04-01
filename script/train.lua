@@ -4,10 +4,11 @@
  * See LICENSE.md in the project directory for license information.
 --]]
 
+local train_utils = {}
 -- find main locomotive in a given train
 -- Parameters: LuaTrain
 -- Returns: LuaEntity
-local function get_main_locomotive(train)
+function train_utils.get_main_locomotive(train)
   if train.valid and train.locomotives and (#train.locomotives.front_movers > 0 or #train.locomotives.back_movers > 0) then
     return train.locomotives.front_movers and train.locomotives.front_movers[1] or train.locomotives.back_movers[1]
   end
@@ -16,15 +17,15 @@ end
 -- find main locomotive name in a given train
 -- Parameters: LuaTrain
 -- Returns: string containing backer_name of main locomotive
-local function get_train_name(train)
-  local loco = get_main_locomotive(train)
+function train_utils.get_train_name(train)
+  local loco = train_utils.get_main_locomotive(train)
   return loco and loco.backer_name
 end
 
 -- rotates a single carriage of a train
 -- Parameters: LuaEntity
 -- Returns: true if rotated successful
-local function rotate_carriage(entity)
+function train_utils.rotate_carriage(entity)
   local disconnected_back = entity.disconnect_rolling_stock(defines.rail_direction.back)
   local disconnected_front = entity.disconnect_rolling_stock(defines.rail_direction.front)
   entity.rotate()
@@ -48,10 +49,10 @@ local function rotate_carriage(entity)
 end
 
 -- creates string representing train composition
--- L for locomotives, C for cargo wagons, F for fluid wagons
+-- L for locomotives, C for cargo wagons, F for fluid wagons, A for artillery wagon
 -- Parameters: LuaTrain
 -- Returns: string
-local function get_train_composition_string(train)
+function train_utils.get_train_composition_string(train)
   if train and train.valid then
     local carriages = train.carriages
     local comp_string = ""
@@ -74,6 +75,8 @@ local function get_train_composition_string(train)
         comp_string = comp_string.."C"
       elseif carriage.type == "fluid-wagon" then
         comp_string = comp_string.."F"
+      elseif carriage.type == "artillery-wagon" then
+        comp_string = comp_string.."A"
       else
         comp_string = comp_string.."?"
       end
@@ -84,9 +87,4 @@ local function get_train_composition_string(train)
   end
 end
 
-return {
-  get_main_locomotive = get_main_locomotive,
-  get_train_name = get_train_name,
-  rotate_carriage = rotate_carriage,
-  get_train_composition_string = get_train_composition_string
-}
+return train_utils

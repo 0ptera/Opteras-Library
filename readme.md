@@ -35,3 +35,4 @@ get_distance()<br />
 [get_main_locomotive](https://github.com/Yousei9/Opteras-Library/wiki/Control-Stage-Functions#get_main_locomotive)<br />
 [get_train_name](https://github.com/Yousei9/Opteras-Library/wiki/Control-Stage-Functions#get_train_name)<br />
 [rotate_carriage](https://github.com/Yousei9/Opteras-Library/wiki/Control-Stage-Functions#rotate_carriage)<br />
+[get_train_composition_string](https://github.com/Yousei9/Opteras-Library/wiki/Control-Stage-Functions#get_train_composition_string)<br />

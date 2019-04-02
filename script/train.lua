@@ -4,11 +4,10 @@
  * See LICENSE.md in the project directory for license information.
 --]]
 
-local train_utils = {}
 -- find main locomotive in a given train
 -- Parameters: LuaTrain
 -- Returns: LuaEntity
-function train_utils.get_main_locomotive(train)
+function get_main_locomotive(train)
   if train.valid and train.locomotives and (#train.locomotives.front_movers > 0 or #train.locomotives.back_movers > 0) then
     return train.locomotives.front_movers and train.locomotives.front_movers[1] or train.locomotives.back_movers[1]
   end
@@ -17,15 +16,15 @@ end
 -- find main locomotive name in a given train
 -- Parameters: LuaTrain
 -- Returns: string containing backer_name of main locomotive
-function train_utils.get_train_name(train)
-  local loco = train_utils.get_main_locomotive(train)
+function get_train_name(train)
+  local loco = get_main_locomotive(train)
   return loco and loco.backer_name
 end
 
 -- rotates a single carriage of a train
 -- Parameters: LuaEntity
 -- Returns: true if rotated successful
-function train_utils.rotate_carriage(entity)
+function rotate_carriage(entity)
   local disconnected_back = entity.disconnect_rolling_stock(defines.rail_direction.back)
   local disconnected_front = entity.disconnect_rolling_stock(defines.rail_direction.front)
   entity.rotate()
@@ -52,7 +51,7 @@ end
 -- L for locomotives, C for cargo wagons, F for fluid wagons, A for artillery wagon
 -- Parameters: LuaTrain
 -- Returns: string
-function train_utils.get_train_composition_string(train)
+function get_train_composition_string(train)
   if train and train.valid then
     local carriages = train.carriages
     local comp_string = ""
@@ -87,4 +86,10 @@ function train_utils.get_train_composition_string(train)
   end
 end
 
-return train_utils
+return {
+  get_distance = get_distance,
+  get_distance_squared = get_distance_squared,
+  ticks_to_timestring = ticks_to_timestring,
+  compare_tables = compare_tables,
+  get_train_composition_string = get_train_composition_string,
+}

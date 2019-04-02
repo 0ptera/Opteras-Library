@@ -7,9 +7,8 @@
 -- calculates the distance in tiles between two positions
 -- Parameters: LuaPosition, LuaPosition
 -- Returns: distance as double
-local misc = {}
 local sqrt = math.sqrt
-function misc.get_distance(a, b)
+function get_distance(a, b)
   local x, y = a.x-b.x, a.y-b.y
   return sqrt(x*x+y*y) -- sqrt shouldn't be necessary for comparing distances
 end
@@ -17,7 +16,7 @@ end
 -- calculates the squared distance in tiles between two positions, slightly faster than get_distance
 -- Parameters: LuaPosition, LuaPosition
 -- Returns: squared distance as double
-function misc.get_distance_squared(a, b)
+function get_distance_squared(a, b)
   local x, y = a.x-b.x, a.y-b.y
   return (x*x+y*y)
 end
@@ -28,7 +27,7 @@ end
 local floor = math.floor
 local format = string.format
 local format_string = "%d:%02d"
-function misc.ticks_to_timestring(tick)
+function ticks_to_timestring(tick)
 	local total_seconds = tick/60
 	local minutes = floor(total_seconds/60)
 	local seconds = floor(total_seconds % 60)
@@ -39,7 +38,7 @@ end
 -- (shallowly) compares two tables by content
 -- Parameters: table1, table2
 -- Returns: bool
-function misc.compare_tables(tb1, tb2)
+function compare_tables(tb1, tb2)
   if tb1 == tb2 then return true end
   local t1_type = type(tb1)
   if t1_type ~= type(tb2) then return false end
@@ -57,4 +56,9 @@ function misc.compare_tables(tb1, tb2)
   return true
 end
 
-return misc
+return {
+  get_distance = get_distance,
+  get_distance_squared = get_distance_squared,
+  ticks_to_timestring = ticks_to_timestring,
+  compare_tables = compare_tables,
+}

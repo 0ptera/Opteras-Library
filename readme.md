@@ -36,3 +36,10 @@ get_distance()<br />
 [get_train_name](https://github.com/Yousei9/Opteras-Library/wiki/Control-Stage-Functions#get_train_name)<br />
 [rotate_carriage](https://github.com/Yousei9/Opteras-Library/wiki/Control-Stage-Functions#rotate_carriage)<br />
 [get_train_composition_string](https://github.com/Yousei9/Opteras-Library/wiki/Control-Stage-Functions#get_train_composition_string)<br />
+[open_train_gui](https://github.com/Yousei9/Opteras-Library/wiki/Control-Stage-Functions#open_train_gui)<br />
+
+### script/logger
+[_log](https://github.com/Yousei9/Opteras-Library/wiki/Control-Stage-Functions#_log)<br />
+[_print](https://github.com/Yousei9/Opteras-Library/wiki/Control-Stage-Functions#_print)<br />
+[_tostring](https://github.com/Yousei9/Opteras-Library/wiki/Control-Stage-Functions#_tostring)<br />
+[settings](https://github.com/Yousei9/Opteras-Library/wiki/Control-Stage-Functions#settings)<br />

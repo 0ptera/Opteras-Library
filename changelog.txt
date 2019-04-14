@@ -3,7 +3,7 @@ Version: 0.1.3
 Date: 2019-04-09
   Features:
     - script.logger: custom log, print and tostring functions
-    - script.train.select_train: open train GUI
+    - script.train.open_train_gui: open train GUI
 ---------------------------------------------------------------------------------------------------
 Version: 0.1.2
 Date: 2019-04-02

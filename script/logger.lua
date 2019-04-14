@@ -222,14 +222,7 @@ local function _log(...)
   local msg_tag = format("%s:%d", info.short_src, info.currentline)
 
   -- build prefix
-  local message = "<" .. msg_tag .. ">\n"
-
-  -- convert all arguments to strings and concatenate
-  local string_tb = {}
-  for i = 1, select("#", ...) do
-    string_tb[i] = any_to_string(select(i, ...))
-  end
-  message = message .. _tostring(...)
+  local message = "<" .. msg_tag .. ">\n" .. _tostring(...)
 
   log(message)
   return message

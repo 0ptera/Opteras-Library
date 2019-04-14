@@ -89,7 +89,7 @@ end
 -- open train GUI for one player
 -- Parameters: uint, LuaTrain
 -- Returns: bool
-function select_train(player_index, train)
+function open_train_gui(player_index, train)
   if train and train.valid and game.players[player_index] then
     local loco = get_main_locomotive(train)
     if loco and loco.valid then
@@ -105,5 +105,5 @@ return {
   get_train_name = get_train_name,
   rotate_carriage = rotate_carriage,
   get_train_composition_string = get_train_composition_string,
-  select_train = select_train,
+  open_train_gui = open_train_gui,
 }

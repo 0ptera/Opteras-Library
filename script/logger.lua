@@ -1,3 +1,9 @@
+--[[ Copyright (c) 2019 Optera, Eduran
+ * Part of Optera's Function Library
+ *
+ * See LICENSE.md in the project directory for license information.
+--]]
+
 --[[ USAGE INSTRUCTIONS
 -- import module for use in your mod:
 custom_log, custom_print, custom_tostring, logger_settings = require(_"__OpteraLib___.script.logger")

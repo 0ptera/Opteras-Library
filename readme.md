@@ -21,6 +21,7 @@ get_distance()<br />
 ### data/utilities
 [copy_prototype](https://github.com/Yousei9/Opteras-Library/wiki/Data-Stage-Functions#copy_prototype)<br />
 [create_icons](https://github.com/Yousei9/Opteras-Library/wiki/Data-Stage-Functions#create_icons)<br />
+[get_energy_value](https://github.com/Yousei9/Opteras-Library/wiki/Data-Stage-Functions#get_energy_value)<br />
 [multiply_energy_value](https://github.com/Yousei9/Opteras-Library/wiki/Data-Stage-Functions#multiply_energy_value)<br />
 
 ## Control Stage Functions

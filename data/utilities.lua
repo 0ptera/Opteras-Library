@@ -69,16 +69,40 @@ function create_icons(prototype, new_layers)
   end
 end
 
+local exponent_multipliers = {
+  ['n'] = 0.000000001,
+  ['u'] = 0.000001,
+  ['m'] = 0.001,
+  ['k'] = 1000,
+  ['M'] = 1000000,
+  ['G'] = 1000000000,
+  ['T'] = 1000000000000,
+  ['P'] = 1000000000000000,
+}
+
+-- returns energy strings as value + suffix
+-- Parameters: energy_string, multiplicator
+-- Returns: value, unit
+function get_energy_value(energy_string)
+  if type(energy_string) == "string" then
+    local value, str, exp, unit =  string.match(energy_string, "([%-+]?[0-9]*%.?[0-9]+)(([kMGTP]?)([WJ]))")
+    if exp and exponent_multipliers[exp] then
+      value = value * exponent_multipliers[exp]
+    end
+    return value, unit
+  end
+end
+
 -- multiplies energy string, e.g. '12kW' with factor
 -- Parameters: energy_string, multiplicator
 -- Returns: updated energy string
 function multiply_energy_value(energy_string, factor)
   if type(energy_string) == "string" then
-    local num, str, exp, energy = string.match(energy_string, "([%-+]?[0-9]*%.?[0-9]+)(([kKMGTPH]?)([WJ]))")
-    if num and str and energy then
-      local correctedNum = tonumber(num) * factor
-      return correctedNum..str
+    local value, unit = get_energy_value(energy_string)
+    if value then
+      value = value * factor
     end
+    return value..unit
   end
 end
 

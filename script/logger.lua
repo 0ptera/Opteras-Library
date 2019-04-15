@@ -2,29 +2,31 @@
  * Part of Optera's Function Library
  *
  * See LICENSE.md in the project directory for license information.
---]]
 
---[[ USAGE INSTRUCTIONS
--- import module for use in your mod:
-custom_log, custom_print, custom_tostring, logger_settings = require(_"__OpteraLib___.script.logger")
+USAGE INSTRUCTIONS
 
--- custom_log function:
+-- importing the entire module:
+logger = require(_"__OpteraLib___.script.logger")
+-- importing a single function
+custom_log = require(_"__OpteraLib___.script.logger").log
+
+-- log function:
 Takes a variable number of arguments of any type. Arguments are
 converted into a human-readable string, concatenated and written
 to factorio_current.log. The logged message is pre-pended with the
 file and line from which custom_log was called.
 
--- custom_print function
+-- print function
 Takes a variable number of arguments of any type. Arguments are
 converted into a human-readable string, concatenate and printed
 to Factorios ingame console for every player.
 
--- custom_tostring function
-Takes asingle argument of any type (additional arguments are
+-- tostring function
+Takes a single argument of any type (additional arguments are
 ignored). Returns a human-readable string representing the
 argument.
 
--- logger_settings
+-- settings
 A table with settings 'max_depth' and 'class_dictionary'.
 'max_depth' decides how many levels of nested tables or objects
 are converted to string.
@@ -33,6 +35,7 @@ to convert to string. The syntax and composition of the dictionary
 is explained below.
 
 --]]
+
 local class_dict = {}
 local settings = {
   max_depth = 4, -- maximum depth up to which nested objects are converted
@@ -40,31 +43,53 @@ local settings = {
   }
 --[[
 Define factorio objects and properties logger should convert to tables.
-Class names have to be a key with table value in class_dict.
+Each class name is a key with table value in class_dict.
 Table syntax for each class:
 - property_name = true
-  converts Class.property_name to string and lists it under its own name
-- display_name = {"property_name"}
-  converts Class.property_name to string and lists it under display_name
-- display_name = {"property_name", "sub_property_name"}
-  converts Class.property_name.sub_property_name to string and lists it under display_name
-- display_name = "method_name"
-  calls Class.method_name() and converts return value to string, listed under display_name
+    converts Class.property_name to string and lists it under its own name
+- display_name = {type = "simple", name = "property_name"}
+    converts Class.property_name to string and lists it under display_name
+- display_name = {type = "nested", name = {"property_name", "sub_property_name"}}
+    converts Class.property_name.sub_property_name to string and lists it
+    under display_name
+- display_name = {type = "method", name = "method_name", arguments = {arg1, arg2}}
+    calls Class.method_name(arg1, arg2) and converts return value to string,
+    listed under display_name
+
+- each type supports an optional dictionary entry that is used to convert
+  the returned value. See definitions for LuaTrain.state and
+  LuaCircuitNetwork.wire_type below for examples.
 --]]
 
 class_dict.LuaGuiElement = {
   name = true,
   type = true,
-  parent_name = {"parent", "name"},
+  parent_name = {type = "nested", name = {"parent", "name"}},
   children_names = true,
   visible = true,
-  style_name = {"style", "name"},
+  style_name = {type = "nested", name = {"style", "name"}},
 }
 class_dict.LuaTrain = {
   id = true,
-  state = true,
-  contents = "get_contents",
-  fluid_contents = "get_fluid_contents",
+  state = {
+    type = "simple",
+    name = "state",
+    dict = {
+      [defines.train_state.on_the_path] = "on_the_path",
+      [defines.train_state.path_lost] = "path_lost",
+      [defines.train_state.no_schedule] = "no_schedule",
+      [defines.train_state.no_path] = "no_path",
+      [defines.train_state.arrive_signal] = "arrive_signal",
+      [defines.train_state.wait_signal] = "wait_signal",
+      [defines.train_state.arrive_station] = "arrive_station",
+      [defines.train_state.wait_station] = "wait_station",
+      [defines.train_state.manual_control_stop] = "manual_control_stop",
+      [defines.train_state.manual_control] = "manual_control",
+    }
+  },
+  station = true,
+  contents = {type = "method", name = "get_contents", arguments = nil},
+  fluid_contents = {type = "method", name = "get_fluid_contents", arguments = nil},
 }
 class_dict.LuaPlayer = {
   name = true,
@@ -79,7 +104,15 @@ class_dict.LuaEntity = {
 }
 class_dict.LuaCircuitNetwork = {
   entity = true,
-  wire_type = true,
+  wire_type = {
+    type = "simple",
+    name = "wire_type",
+    dict = {
+      [defines.wire_type.red]	= "red",
+      [defines.wire_type.green] = "green",
+      [defines.wire_type.copper] = "copper"
+    }
+  },
   signals = true,
   network_id = true,
 }
@@ -141,19 +174,29 @@ local function get_class_property(obj, property_name, property)
   if property == true then
     value = obj[property_name]
   elseif type(property) == "table" then
-    value = obj
-    for _,v in pairs(property) do
-      value = value[v]
-      if type(value) ~= "table" then
-        break
+    if property.type == "simple" then
+      value = obj[property.name]
+    elseif property.type == "nested" then
+      value = obj
+      for _,v in pairs(property.name) do
+        value = value[v]
+        if type(value) ~= "table" then
+          break
+        end
+      end
+    elseif property.type == "method" then
+      if type(property.arguments) == "table" then
+        value = obj[property.name](unpack(property.arguments))
+      else
+        value = obj[property.name](property.arguments)
       end
     end
-  elseif type(property) == "string" then
-    value = obj[property]()
+    if type(property.dict) == "table" then
+      value = property.dict[value] or value
+    end
   end
   return value
 end
-
 
 local function factorio_obj_to_table(obj)
   local class_name = help2name(obj.help())
@@ -238,4 +281,9 @@ local function _print(...)
   if game then game.print(_tostring(...)) end
 end
 
-return function() return _log, _print, _tostring, settings end
+return {
+  log = _log,
+  print = _print,
+  tostring = _tostring,
+  settings = settings
+}

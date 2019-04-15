@@ -80,7 +80,7 @@ local exponent_multipliers = {
   ['P'] = 1000000000000000,
 }
 
--- returns energy strings as value + suffix
+-- returns energy strings as base unit value + suffix
 -- Parameters: energy_string, multiplicator
 -- Returns: value, unit
 function get_energy_value(energy_string)

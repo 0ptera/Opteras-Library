@@ -40,7 +40,7 @@ get_distance()<br />
 [open_train_gui](https://github.com/Yousei9/Opteras-Library/wiki/Control-Stage-Functions#open_train_gui)<br />
 
 ### script/logger
-[_log](https://github.com/Yousei9/Opteras-Library/wiki/Control-Stage-Functions#_log)<br />
-[_print](https://github.com/Yousei9/Opteras-Library/wiki/Control-Stage-Functions#_print)<br />
-[_tostring](https://github.com/Yousei9/Opteras-Library/wiki/Control-Stage-Functions#_tostring)<br />
+[custom_log](https://github.com/Yousei9/Opteras-Library/wiki/Control-Stage-Functions#custom_log)<br />
+[custom_print](https://github.com/Yousei9/Opteras-Library/wiki/Control-Stage-Functions#custom_print)<br />
+[custom_tostring](https://github.com/Yousei9/Opteras-Library/wiki/Control-Stage-Functions#custom_tostring)<br />
 [settings](https://github.com/Yousei9/Opteras-Library/wiki/Control-Stage-Functions#settings)<br />

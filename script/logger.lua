@@ -6,9 +6,9 @@
 USAGE INSTRUCTIONS
 
 -- importing the entire module:
-logger = require(_"__OpteraLib___.script.logger")
+logger = require("__OpteraLib__.script.logger")
 -- importing a single function
-custom_log = require(_"__OpteraLib___.script.logger").log
+custom_log = require("__OpteraLib__.script.logger").log
 
 -- log function:
 Takes a variable number of arguments of any type. Arguments are

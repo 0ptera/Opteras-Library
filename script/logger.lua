@@ -26,10 +26,24 @@ Takes a single argument of any type (additional arguments are
 ignored). Returns a human-readable string representing the
 argument.
 
+-- add_debug_commands function
+Adds three new console commands: global_log, global_print and wipe_ui
+  * global_log: Writes global table to log file. If called with a string
+      paramter, will write global[string] instead.
+  * global_print: Same as global_log, but prints to console.
+  * wipe_ui: Deletes all modded UI elements. Can be called with
+      left/center/top as paramter to delete only elements attached
+      to the specified GUI root element.
+
 -- settings
-A table with settings 'max_depth' and 'class_dictionary'.
-'max_depth' decides how many levels of nested tables or objects
+A table with settings 'max_depth' (5), 'read_all_properties' (false)
+and 'class_dictionary'.
+'max_depth' sets how many levels of nested tables or objects
 are converted to string.
+'read_all_properties' makes logger ignore the class dictionary and try
+to convert all properties of Factorio objects. WARNING: this setting can
+produces _huge_ log files, especially when used with increase 'max_depth'.
+Use with caution and only in developer builds of your mod.
 'class_dictionary' is used to tell logger which Factorio objects
 to convert to string. The syntax and composition of the dictionary
 is explained below.
@@ -38,7 +52,8 @@ is explained below.
 
 local class_dict = {}
 local settings = {
-  max_depth = 4, -- maximum depth up to which nested objects are converted
+  max_depth = 5, -- maximum depth up to which nested objects are converted
+  read_all_properties = false,
   class_dictionary = class_dict,
   }
 --[[
@@ -142,6 +157,11 @@ local function serpb(arg)
           tag = gsub(tag, "^FOBJ_", "")
           tag = gsub(tag, "[%s=]", "")
           return tag..head..body..tail
+        elseif find(body, 'FOBJ_') then
+          body = gsub(body, "FOBJ_", "")
+          body = gsub(body, "[%s=]", "")
+          body = gsub(body, '"', "")
+          return tag..head..body..tail
         else
           return tag..head..body..tail
         end
@@ -151,6 +171,17 @@ local function serpb(arg)
 end
 
 -- read class name of a Factorio lua object from string returned by its .help() method
+local function help2properties(str)
+  local name, methods, values = match(str, "Help for%s([^:]*):[^:]*:\n([^:]*):\n(.*)")
+  local properties = {}
+  for line in values:gmatch("[^\n]+") do
+    local name, readable = match(line, "([%S]*)%s*%[(%w+)")
+    readable = find(readable, "R") or false
+    if readable then properties[name] = true end
+  end
+  return properties
+end
+
 local function help2name(str)
   return match(str, "Help for%s([^:]*)")
 end
@@ -200,12 +231,18 @@ end
 
 local function factorio_obj_to_table(obj)
   local class_name = help2name(obj.help())
+  local properties
+  if settings.read_all_properties then
+    properties = help2properties(obj.help())
+  else
+    properties = class_dict[class_name]
+  end
   local tb = nil
-  if class_dict[class_name] then
+  if properties then
     tb = {}
-    for property_name, property in pairs(class_dict[class_name]) do
+    for property_name, property in pairs(properties) do
       local status, value = pcall(get_class_property, obj, property_name, property)
-      tb[property_name] = status and value or nil
+      tb[property_name] = (status or nil) and value
     end
   end
   return {["FOBJ_"..class_name] = tb} -- prefix for formatting with serpent.block
@@ -216,15 +253,24 @@ local function table_to_string(tb, level)
   -- check for stuff that serpent does not convert to my liking and do the conversion here
   local log_tb = {} -- copy table, otherwise logger would modify the original input table
   for k,v in pairs(tb) do
-    if type(v) == "table" and is_object(v) then
-      log_tb[k] = table_to_string(factorio_obj_to_table(v), level) -- yay, recursion
-    elseif type(v) == "table" and level < settings.max_depth then --regular table
-      log_tb[k] = table_to_string(v, level) -- more recursion
+    if type(v) == "table" then
+      if level < settings.max_depth then
+        if is_object(v) then
+          v = table_to_string(factorio_obj_to_table(v), level) -- yay, recursion
+        else --regular table
+          v = table_to_string(v, level) -- more recursion
+        end
+      else
+        if is_object(v) then
+          v = help2name(v.help()) .. "{...}"
+        else
+          v = "{...}"
+        end
+      end
     elseif type(v) == "function" then
       v = function_to_string(v)
-    else
-      log_tb[k] = v
     end
+    log_tb[k] = v
   end
   if level == 1 then
     return serpb(log_tb) -- format converted table with serpent
@@ -256,7 +302,9 @@ local function any_to_string(arg)
   end
 end
 
--- main function to generate output
+-- public module functions
+
+local logger = {settings = settings}
 local function _tostring(...)
   -- convert all arguments to strings and concatenate
   local string_tb = {}
@@ -265,6 +313,7 @@ local function _tostring(...)
   end
   return concat(string_tb, " ")
 end
+logger.tostring = _tostring
 
 local function _log(...)
   local info = getinfo(2, "Sl")
@@ -276,14 +325,59 @@ local function _log(...)
   log(message)
   return message
 end
+logger.log = _log
 
 local function _print(...)
   if game then game.print(_tostring(...)) end
 end
+logger.print = _print
 
-return {
-  log = _log,
-  print = _print,
-  tostring = _tostring,
-  settings = settings
-}
+function logger.add_debug_commands()
+  commands.add_command(
+    "global_print",
+    "Print global table to console.",
+    function(data)
+      if data.parameter then
+        _print(global[data.parameter])
+      else
+        _print(global)
+      end
+    end
+  )
+  commands.add_command(
+    "global_log",
+    "Write global table to log file.",
+    function(data)
+      if data.parameter then
+        _log("global[" .. data.parameter .. "] =", global[data.parameter])
+      else
+        _log("global =", global)
+      end
+      game.print("Global table dumped to log file.")
+    end
+  )
+  local function get_gui(player, name)
+    return player.gui[name]
+  end
+  commands.add_command(
+    "wipe_ui",
+    "Delete all UI elements. Specify left/center/top as paramter to delete only UI elements attached to the selected GUI.",
+    function(data)
+      local player = game.players[data.player_index]
+      local param = data.parameter
+      if param then
+        if pcall(get_gui, player, param) then
+          player.gui[data.parameter].clear()
+        else
+          _print(param, "is not a valid UI root element.")
+        end
+      else
+        player.gui.left.clear()
+        player.gui.center.clear()
+        player.gui.top.clear()
+      end
+    end
+  )
+end
+
+return logger

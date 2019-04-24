@@ -1,4 +1,10 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.1.6
+Date: 2019-04-15
+  Features:
+    - New logger function: script.logger.add_debug_commands
+    - New logger setting: script.logger.settings.read_all_properties
+---------------------------------------------------------------------------------------------------
 Version: 0.1.5
 Date: 2019-04-15
   Changes:

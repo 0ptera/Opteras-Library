@@ -349,9 +349,9 @@ function logger.add_debug_commands()
     "Write global table to log file.",
     function(data)
       if data.parameter then
-        _log("global[" .. data.parameter .. "] =", global[data.parameter])
+        _log("Current tick:", game.tick, "\nglobal[" .. data.parameter .. "] =", global[data.parameter])
       else
-        _log("global =", global)
+        _log("Current tick:", game.tick, "\nglobal =", global)
       end
       game.print("Global table dumped to log file.")
     end

@@ -83,6 +83,7 @@ class_dict.LuaGuiElement = {
   children_names = true,
   visible = true,
   style_name = {type = "nested", name = {"style", "name"}},
+  index = true
 }
 class_dict.LuaTrain = {
   id = true,
@@ -90,19 +91,20 @@ class_dict.LuaTrain = {
     type = "simple",
     name = "state",
     dict = {
-      [defines.train_state.on_the_path] = "on_the_path",
-      [defines.train_state.path_lost] = "path_lost",
-      [defines.train_state.no_schedule] = "no_schedule",
-      [defines.train_state.no_path] = "no_path",
-      [defines.train_state.arrive_signal] = "arrive_signal",
-      [defines.train_state.wait_signal] = "wait_signal",
-      [defines.train_state.arrive_station] = "arrive_station",
-      [defines.train_state.wait_station] = "wait_station",
-      [defines.train_state.manual_control_stop] = "manual_control_stop",
-      [defines.train_state.manual_control] = "manual_control",
+      [defines.train_state.on_the_path] = "on_the_path (" .. defines.train_state.on_the_path .. ")",
+      [defines.train_state.path_lost] = "path_lost (" .. defines.train_state.path_lost .. ")",
+      [defines.train_state.no_schedule] = "no_schedule (" .. defines.train_state.no_schedule .. ")",
+      [defines.train_state.no_path] = "no_path (" .. defines.train_state.no_path .. ")",
+      [defines.train_state.arrive_signal] = "arrive_signal (" .. defines.train_state.arrive_signal .. ")",
+      [defines.train_state.wait_signal] = "wait_signal (" .. defines.train_state.wait_signal .. ")",
+      [defines.train_state.arrive_station] = "arrive_station (" .. defines.train_state.arrive_station .. ")",
+      [defines.train_state.wait_station] = "wait_station (" .. defines.train_state.wait_station .. ")",
+      [defines.train_state.manual_control_stop] = "manual_control_stop (" .. defines.train_state.manual_control_stop .. ")",
+      [defines.train_state.manual_control] = "manual_control (" .. defines.train_state.manual_control .. ")",
     }
   },
   station = true,
+  signal = true
   contents = {type = "method", name = "get_contents", arguments = nil},
   fluid_contents = {type = "method", name = "get_fluid_contents", arguments = nil},
 }
@@ -115,7 +117,7 @@ class_dict.LuaEntity = {
   backer_name = true,
   name = true,
   type = true,
-  position = true,
+  unit_number = true,
 }
 class_dict.LuaCircuitNetwork = {
   entity = true,
@@ -139,6 +141,11 @@ class_dict.LuaStyle = {
   maximal_width = true,
 }
 
+class_dict.LuaItemStack = {
+  type = true,
+  count = true,
+  valid_for_read = true,
+}
 -- cache functions
 local match, format, gsub, find = string.match, string.format, string.gsub, string.find
 local concat = table.concat

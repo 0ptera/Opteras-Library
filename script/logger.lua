@@ -333,27 +333,41 @@ end
 logger.print = _print
 
 function logger.add_debug_commands()
+  local function parse_param(data)
+    local tbl = global
+    local complete_name = "global"
+    local param = data.parameter
+    if param then
+      local names, i = {}, 1
+      for name in param:gmatch("[^\.]*") do
+        names[i] = name
+        i = i + 1
+      end
+      for i = 1,# do
+        local name = names[i]
+        tbl = tbl[name]
+        complete_name = complete_name .. "[" .. name .. "]"
+        if not tbl then break end
+      end
+    end
+    return complete_name, tbl
+  end
+
   commands.add_command(
     "global_print",
     "Print global table to console.",
     function(data)
-      if data.parameter then
-        _print(global[data.parameter])
-      else
-        _print(global)
-      end
+      local name, tbl = parse_param(data)
+      _print(name, "=", tbl)
     end
   )
   commands.add_command(
     "global_log",
     "Write global table to log file.",
     function(data)
-      if data.parameter then
-        _log("Current tick:", game.tick, "\nglobal[" .. data.parameter .. "] =", global[data.parameter])
-      else
-        _log("Current tick:", game.tick, "\nglobal =", global)
-      end
-      game.print("Global table dumped to log file.")
+      local name, tbl = parse_param(data)
+      _log("Table dump triggered by console command. Current tick:", game.tick, "\n", name, "=", tbl)
+      game.print(name .. "written to log file.")
     end
   )
   local function get_gui(player, name)

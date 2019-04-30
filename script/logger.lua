@@ -104,7 +104,7 @@ class_dict.LuaTrain = {
     }
   },
   station = true,
-  signal = true
+  signal = true,
   contents = {type = "method", name = "get_contents", arguments = nil},
   fluid_contents = {type = "method", name = "get_fluid_contents", arguments = nil},
 }
@@ -345,13 +345,7 @@ function logger.add_debug_commands()
     local complete_name = "global"
     local param = data.parameter
     if param then
-      local names, i = {}, 1
-      for name in param:gmatch("[^\.]*") do
-        names[i] = name
-        i = i + 1
-      end
-      for i = 1,# do
-        local name = names[i]
+      for name in param:gmatch("[^%.]*") do
         tbl = tbl[name]
         complete_name = complete_name .. "[" .. name .. "]"
         if not tbl then break end

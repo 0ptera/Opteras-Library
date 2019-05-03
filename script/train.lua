@@ -51,12 +51,15 @@ end
 -- L for locomotives, C for cargo wagons, F for fluid wagons, A for artillery wagon
 -- Parameters: LuaTrain
 -- Returns: string
+local concat = table.concat
 function get_train_composition_string(train)
   if train and train.valid then
     local carriages = train.carriages
-    local comp_string = ""
-    local locos_front = train.locomotives["front_movers"]
+    local string_table = {}
+    local count_wagons, count_loco_front, count_loco_back, i = 0, 0, 0, 0
+    local locos_front = train.locomotives.front_movers
     for _,carriage in pairs(carriages) do
+      i = i + 1
       if carriage.type == "locomotive" then
         local faces_forward = false
         for _,loco in ipairs(locos_front) do
@@ -66,21 +69,27 @@ function get_train_composition_string(train)
           end
         end
         if faces_forward then
-          comp_string = comp_string.."<L<"
+          string_table[i] = "<L<"
+          count_loco_front = count_loco_front + 1
         else
-          comp_string = comp_string..">L>"
+          string_table[i] = ">L>"
+          count_loco_back = count_loco_back + 1
         end
       elseif carriage.type == "cargo-wagon" then
-        comp_string = comp_string.."C"
+        count_wagons = count_wagons + 1
+        string_table[i] = "C"
       elseif carriage.type == "fluid-wagon" then
-        comp_string = comp_string.."F"
+        count_wagons = count_wagons + 1
+        string_table[i] = "F"
       elseif carriage.type == "artillery-wagon" then
-        comp_string = comp_string.."A"
+        count_wagons = count_wagons + 1
+        string_table[i] = "A"
       else
-        comp_string = comp_string.."?"
+        count_wagons = count_wagons + 1
+        string_table[i] = "?"
       end
     end
-    return comp_string
+    return concat(string_table), {total = i, wagons = count_wagons, front_movers = count_loco_front, back_movers = count_loco_back}
   else
     return ""
   end

@@ -21,19 +21,37 @@ function get_distance_squared(a, b)
   return (x*x+y*y)
 end
 
--- converts ticks into "mm:ss" format
--- Parameters: tick
+-- converts ticks into "[hh:]mm:ss" format
+-- Parameters: tick (optional)
 -- Returns: formated string
 local floor = math.floor
 local format = string.format
-local format_string = "%d:%02d"
+local format_string_1 = "%d:%02d"
+local format_string_2 = "%d:%02d:%02d"
 function ticks_to_timestring(tick)
-	local total_seconds = tick/60
+	local total_seconds = floor((tick or game.tick)/60)
+	local seconds = total_seconds % 60
 	local minutes = floor(total_seconds/60)
-	local seconds = floor(total_seconds % 60)
-	return format(format_string, minutes, seconds)
+  if minutes > 59 then
+    minutes = minutes % 60
+    local hours = floor(total_seconds/3600)
+    return format(format_string_2, hours, minutes, seconds)
+  else
+    return format(format_string_1, minutes, seconds)
+  end
 end
 
+-- converts arbitrary version string X.Y.Z into xx.yy.zz for comparison
+-- Parameters: string in format X.Y.Z
+-- Returns: string in format xx.yy.zz
+function format_version(version_string)
+  if version_string then
+    local X, Y, Z = version_string:match("(%d+).(%d+).(%d+)")
+    if tonumber(X) and tonumber(Y) and tonumber(Z) then
+      return format("%02d.%02d.%02d", X, Y, Z)
+    end
+  end
+end
 
 -- (shallowly) compares two tables by content
 -- Parameters: table1, table2
@@ -61,4 +79,5 @@ return {
   get_distance_squared = get_distance_squared,
   ticks_to_timestring = ticks_to_timestring,
   compare_tables = compare_tables,
+  format_version = format_version,
 }

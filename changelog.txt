@@ -1,4 +1,13 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.1.7
+Date: 2019-05-05
+  Features:
+    - added script.misc.format_version
+  Changes:
+    - script.misc.ticks_to_timestring outputs in hh:mm:ss format for time >= 60 minutes
+    - script.misc.ticks_to_timestring uses current tick if called without arguments
+    - script.train.get_train_composition_string has a second return value: a table with wagon and locomotive counts
+---------------------------------------------------------------------------------------------------
 Version: 0.1.6
 Date: 2019-04-15
   Features:

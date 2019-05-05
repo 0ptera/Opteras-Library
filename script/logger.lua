@@ -83,6 +83,7 @@ class_dict.LuaGuiElement = {
   children_names = true,
   visible = true,
   style_name = {type = "nested", name = {"style", "name"}},
+  index = true
 }
 class_dict.LuaTrain = {
   id = true,
@@ -90,19 +91,20 @@ class_dict.LuaTrain = {
     type = "simple",
     name = "state",
     dict = {
-      [defines.train_state.on_the_path] = "on_the_path",
-      [defines.train_state.path_lost] = "path_lost",
-      [defines.train_state.no_schedule] = "no_schedule",
-      [defines.train_state.no_path] = "no_path",
-      [defines.train_state.arrive_signal] = "arrive_signal",
-      [defines.train_state.wait_signal] = "wait_signal",
-      [defines.train_state.arrive_station] = "arrive_station",
-      [defines.train_state.wait_station] = "wait_station",
-      [defines.train_state.manual_control_stop] = "manual_control_stop",
-      [defines.train_state.manual_control] = "manual_control",
+      [defines.train_state.on_the_path] = "on_the_path (" .. defines.train_state.on_the_path .. ")",
+      [defines.train_state.path_lost] = "path_lost (" .. defines.train_state.path_lost .. ")",
+      [defines.train_state.no_schedule] = "no_schedule (" .. defines.train_state.no_schedule .. ")",
+      [defines.train_state.no_path] = "no_path (" .. defines.train_state.no_path .. ")",
+      [defines.train_state.arrive_signal] = "arrive_signal (" .. defines.train_state.arrive_signal .. ")",
+      [defines.train_state.wait_signal] = "wait_signal (" .. defines.train_state.wait_signal .. ")",
+      [defines.train_state.arrive_station] = "arrive_station (" .. defines.train_state.arrive_station .. ")",
+      [defines.train_state.wait_station] = "wait_station (" .. defines.train_state.wait_station .. ")",
+      [defines.train_state.manual_control_stop] = "manual_control_stop (" .. defines.train_state.manual_control_stop .. ")",
+      [defines.train_state.manual_control] = "manual_control (" .. defines.train_state.manual_control .. ")",
     }
   },
   station = true,
+  signal = true,
   contents = {type = "method", name = "get_contents", arguments = nil},
   fluid_contents = {type = "method", name = "get_fluid_contents", arguments = nil},
 }
@@ -115,7 +117,7 @@ class_dict.LuaEntity = {
   backer_name = true,
   name = true,
   type = true,
-  position = true,
+  unit_number = true,
 }
 class_dict.LuaCircuitNetwork = {
   entity = true,
@@ -139,6 +141,11 @@ class_dict.LuaStyle = {
   maximal_width = true,
 }
 
+class_dict.LuaItemStack = {
+  type = true,
+  count = true,
+  valid_for_read = true,
+}
 -- cache functions
 local match, format, gsub, find = string.match, string.format, string.gsub, string.find
 local concat = table.concat
@@ -333,51 +340,70 @@ end
 logger.print = _print
 
 function logger.add_debug_commands()
-  commands.add_command(
-    "global_print",
-    "Print global table to console.",
-    function(data)
-      if data.parameter then
-        _print(global[data.parameter])
-      else
-        _print(global)
+  local function parse_param(data)
+    local tbl = global
+    local complete_name = "global"
+    local param = data.parameter
+    if param then
+      for name in param:gmatch("[^%.]+") do
+        tbl = tbl[name]
+        complete_name = complete_name .. "[" .. name .. "]"
+        if not tbl then break end
       end
     end
-  )
-  commands.add_command(
-    "global_log",
-    "Write global table to log file.",
-    function(data)
-      if data.parameter then
-        _log("global[" .. data.parameter .. "] =", global[data.parameter])
-      else
-        _log("global =", global)
+    return complete_name, tbl
+  end
+  if not commands.commands.global_print then
+    commands.add_command(
+      "global_print",
+      "Print global table to console.",
+      function(data)
+        local name, tbl = parse_param(data)
+        _print(name, "=", tbl)
       end
-      game.print("Global table dumped to log file.")
-    end
-  )
+    )
+  end
+  if not commands.commands.global_log then
+    commands.add_command(
+      "global_log",
+      "Write global table to log file.",
+      function(data)
+        local name, tbl = parse_param(data)
+        _log("Table dump triggered by console command. Current tick:", game.tick, "\n", name, "=", tbl)
+        game.print(name .. " written to log file.")
+      end
+    )
   local function get_gui(player, name)
     return player.gui[name]
   end
-  commands.add_command(
-    "wipe_ui",
-    "Delete all UI elements. Specify left/center/top as paramter to delete only UI elements attached to the selected GUI.",
-    function(data)
-      local player = game.players[data.player_index]
-      local param = data.parameter
-      if param then
-        if pcall(get_gui, player, param) then
-          player.gui[data.parameter].clear()
+  end
+  if not commands.commands.wipe_ui then
+    commands.add_command(
+      "wipe_ui",
+      "Delete all UI elements. Specify left/center/top as paramter to delete only UI elements attached to the selected GUI.",
+      function(data)
+        local player = game.players[data.player_index]
+        local param = data.parameter
+        if param then
+          if pcall(get_gui, player, param) then
+            player.gui[data.parameter].clear()
+          else
+            _print(param, "is not a valid UI root element.")
+          end
         else
-          _print(param, "is not a valid UI root element.")
+          player.gui.left.clear()
+          player.gui.center.clear()
+          player.gui.top.clear()
         end
-      else
-        player.gui.left.clear()
-        player.gui.center.clear()
-        player.gui.top.clear()
       end
-    end
-  )
+    )
+  end
+end
+
+function logger.remove_debug_commands()
+  commands.remove_command("global_print")
+  commands.remove_command("global_log")
+  commands.remove_command("wipe_ui")
 end
 
 return logger

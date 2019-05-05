@@ -41,6 +41,17 @@ function ticks_to_timestring(tick)
   end
 end
 
+-- converts arbitrary version string X.Y.Z into xx.yy.zz for comparison
+-- Parameters: string in format X.Y.Z
+-- Returns: string in format xx.yy.zz
+function format_version(version_string)
+  if version_string then
+    local X, Y, Z = version_string:match("(%d+).(%d+).(%d+)")
+    if tonumber(X) and tonumber(Y) and tonumber(Z) then
+      return format("%02d.%02d.%02d", X, Y, Z)
+    end
+  end
+end
 
 -- (shallowly) compares two tables by content
 -- Parameters: table1, table2
@@ -68,4 +79,5 @@ return {
   get_distance_squared = get_distance_squared,
   ticks_to_timestring = ticks_to_timestring,
   compare_tables = compare_tables,
+  format_version = format_version,
 }

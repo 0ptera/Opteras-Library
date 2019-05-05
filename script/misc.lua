@@ -21,15 +21,15 @@ function get_distance_squared(a, b)
   return (x*x+y*y)
 end
 
--- converts ticks into "hh:mm:ss" format
--- Parameters: tick
+-- converts ticks into "[hh:]mm:ss" format
+-- Parameters: tick (optional)
 -- Returns: formated string
 local floor = math.floor
 local format = string.format
 local format_string_1 = "%d:%02d"
 local format_string_2 = "%d:%02d:%02d"
 function ticks_to_timestring(tick)
-	local total_seconds = floor(tick/60)
+	local total_seconds = floor((tick or game.tick)/60)
 	local seconds = total_seconds % 60
 	local minutes = floor(total_seconds/60)
   if minutes > 59 then

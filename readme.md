@@ -44,3 +44,4 @@ get_distance()<br />
 [print](https://github.com/Yousei9/Opteras-Library/wiki/Control-Stage-Functions#print)<br />
 [tostring](https://github.com/Yousei9/Opteras-Library/wiki/Control-Stage-Functions#tostring)<br />
 [settings](https://github.com/Yousei9/Opteras-Library/wiki/Control-Stage-Functions#settings)<br />
+[add_debug_commands](https://github.com/Yousei9/Opteras-Library/wiki/Control-Stage-Functions#add_debug_commands)<br />

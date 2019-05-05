@@ -345,7 +345,7 @@ function logger.add_debug_commands()
     local complete_name = "global"
     local param = data.parameter
     if param then
-      for name in param:gmatch("[^%.]*") do
+      for name in param:gmatch("[^%.]+") do
         tbl = tbl[name]
         complete_name = complete_name .. "[" .. name .. "]"
         if not tbl then break end
@@ -368,7 +368,7 @@ function logger.add_debug_commands()
     function(data)
       local name, tbl = parse_param(data)
       _log("Table dump triggered by console command. Current tick:", game.tick, "\n", name, "=", tbl)
-      game.print(name .. "written to log file.")
+      game.print(name .. " written to log file.")
     end
   )
   local function get_gui(player, name)

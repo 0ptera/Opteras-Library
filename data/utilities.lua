@@ -109,5 +109,6 @@ end
 return {
   copy_prototype = copy_prototype,
   create_icons = create_icons,
+  get_energy_value = get_energy_value,
   multiply_energy_value = multiply_energy_value,
 }

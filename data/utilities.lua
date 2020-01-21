@@ -47,7 +47,11 @@ function create_icons(prototype, new_layers)
     local icons ={}
     for k,v in pairs(prototype.icons) do
       -- assume every other mod is lacking full prototype definitions
-      icons[#icons+1] = { icon = v.icon, icon_size = v.icon_size or prototype.icon_size or 32, tint = v.tint }
+      icons[#icons+1] = {
+        icon = v.icon,
+        icon_size = v.icon_size or prototype.icon_size or 32,
+        tint = v.tint
+      }
     end
     for _, new_layer in pairs(new_layers) do
       icons[#icons+1] = new_layer
@@ -57,7 +61,12 @@ function create_icons(prototype, new_layers)
   elseif prototype.icon then
     local icons =
     {
-      { icon = prototype.icon, icon_size = prototype.icon_size, tint = {r=1, g=1, b=1, a=1} },
+      {
+        icon = prototype.icon,
+        icon_size = prototype.icon_size,
+        icon_mipmaps = prototype.icon_mipmaps,
+        tint = {r=1, g=1, b=1, a=1}
+      },
     }
     for _, new_layer in pairs(new_layers) do
       icons[#icons+1] = new_layer

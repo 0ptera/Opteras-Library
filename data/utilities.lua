@@ -1,13 +1,13 @@
 --[[ Copyright (c) 2019 Optera
- * Part of Optera's Function Library
- *
- * See LICENSE.md in the project directory for license information.
+* Part of Optera's Function Library
+*
+* See LICENSE.md in the project directory for license information.
 --]]
 
 -- copies prototypes and assigns new name and minable
--- Parameters: prototype, new_name
+-- Parameters: prototype, new_name, remove_icon (optional)
 -- Returns: copied prototype
-function copy_prototype(prototype, new_name)
+function copy_prototype(prototype, new_name, remove_icon)
   if not prototype.type or not prototype.name then
     error("Invalid prototype: prototypes must have name and type properties.")
     return nil
@@ -24,12 +24,19 @@ function copy_prototype(prototype, new_name)
     p.result = new_name
   end
   if p.results then
-		for _,result in pairs(p.results) do
-			if result.name == prototype.name then
-				result.name = new_name
-			end
-		end
-	end
+    for _,result in pairs(p.results) do
+      if result.name == prototype.name then
+        result.name = new_name
+      end
+    end
+  end
+  if remove_icon then
+    p.icon = nil
+    p.icon_size = nil
+    p.icon_mipmaps = nil
+    p.icons = nil
+  end
+
   return p
 end
 

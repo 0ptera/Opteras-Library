@@ -3,6 +3,7 @@ Version: 0.2.1
 Date: 2020-01-23
   Features:
     - utilities.copy_prototype( prototype, new_name, remove_icon(optional) )
+    - added thumbnail
 ---------------------------------------------------------------------------------------------------
 Version: 0.2.0
 Date: 2020-01-21

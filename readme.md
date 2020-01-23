@@ -7,7 +7,7 @@ Make whole module available:<br />
 local optera_lib = require("\_\_OpteraLib\_\_.script.misc")<br />
 optera_lib.get_distance()<br />
 <br />
-Note: The library creates a global reference optera_lib, allowing direct access to functions:<br />
+Note: During data stage the library creates a global reference optera_lib, allowing direct access to functions:<br />
 optera_lib.copy_prototype()<br />
 <br />
 Make single function available:<br />
